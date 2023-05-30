@@ -49,7 +49,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 AUTH_USER_MODEL = 'members.User'
 
-CACHE_TTL = 60 *15
+CACHE_TTL = 60 *5
 
 # Application definition
 
@@ -182,7 +182,7 @@ CACHES = {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379/1",
         "OPTIONS": {
-            'PASSWORD': 'foobared',
+            'PASSWORD': env('REDIS_PASSWORD'),
             "CLIENT_CLASS": "django_redis.client.DefaultClient"
         },
         "KEY_PREFIX": "yourmovies"    

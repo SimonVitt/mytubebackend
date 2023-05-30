@@ -1,18 +1,23 @@
 from django.shortcuts import render
 from rest_framework import generics, status
 from django.utils.decorators import method_decorator
+
+from .permissions import OwnsVideo
 from .pagination import VideosPageNumberPagination
 from backend_your_movies import settings
 from .models import Video
 from .serializers import VideoDetailSerializer, VideoSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
-from django.views.decorators.cache import cache_page
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
+from django.views.decorators.cache import never_cache
+from django.core.cache import cache
+
 
 CACH_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 # Create your views here.
-@method_decorator(cache_page(CACH_TTL), name='dispatch')
+
+@method_decorator(never_cache, name='dispatch')
 class VideosListView(generics.ListCreateAPIView):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
@@ -24,7 +29,11 @@ class VideosListView(generics.ListCreateAPIView):
         serializer.save(author=self.request.user)
         
     def get_queryset(self):
-        return Video.objects.order_by('-created_at')    
+        queryset = cache.get('videos_list')
+        if not queryset:
+            queryset = Video.objects.order_by('-created_at')
+            cache.set('videos_list', queryset, CACH_TTL)
+        return queryset
     
 
 class VideosDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -44,3 +53,9 @@ class OwnVideosListView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return Video.objects.filter(author=user).order_by('-created_at')
+    
+class OwnVideosDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Video.objects.all()
+    serializer_class = VideoDetailSerializer
+    permission_classes = [IsAuthenticated, OwnsVideo]
+    authentication_classes = [JWTAuthentication]

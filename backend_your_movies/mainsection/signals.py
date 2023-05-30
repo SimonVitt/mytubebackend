@@ -5,9 +5,11 @@ import os
 import django_rq
 from .tasks import convert_video, generate_thumbnail
 import backend_your_movies.settings as settings
+from django.core.cache import cache
+
 
 @receiver(post_delete, sender=Video)
-def delete_file(sender, instance, created=False, **kwargs):
+def delete_file(sender, instance, **kwargs):
     if instance.video_file_original:
         if os.path.isfile(instance.video_file_original.path):
             os.remove(instance.video_file_original.path)
@@ -23,6 +25,7 @@ def delete_file(sender, instance, created=False, **kwargs):
     if instance.thumbnail:
         if os.path.isfile(instance.thumbnail.path):
             os.remove(instance.thumbnail.path)
+    cache.delete_many(keys=cache.keys('*videos_list*'))
             
 @receiver(post_save, sender=Video)
 def video_post_safe(sender, instance, created, **kwargs):
