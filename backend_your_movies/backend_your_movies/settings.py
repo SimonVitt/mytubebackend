@@ -41,10 +41,11 @@ ALLOWED_HOSTS = [
     'mytube.backendtest-vitt.de'
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://mytube.backendtest-vitt.de','https://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://mytube.backendtest-vitt.de']
 
 CORS_ALLOWED_ORIGINS = [
     'https://mytube.simon-vitt.de/',
+    'https://www.mytube.simon-vitt.de/'
 ]
 
 AUTH_USER_MODEL = 'members.User'
