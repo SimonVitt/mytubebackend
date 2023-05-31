@@ -20,7 +20,7 @@ from rest_framework.exceptions import ValidationError
 
 class RegisterView(generics.CreateAPIView):
     serializer_class= RegisterSerializer
-    
+    authentication_classes = [] 
     def post(self, request, *args, **kwargs):
         user_to_create=request.data
         serializer = self.get_serializer(data=user_to_create)
@@ -41,7 +41,7 @@ class RegisterView(generics.CreateAPIView):
         return Response(status=status.HTTP_201_CREATED)
     
 class VerifyuserView(generics.UpdateAPIView):
-    
+    authentication_classes = []
     def post(self, request, *args, **kwargs):
         token=request.data['token']
         try:
@@ -58,7 +58,7 @@ class VerifyuserView(generics.UpdateAPIView):
             return Response({'error': 'Invalid Token'},status=status.HTTP_400_BAD_REQUEST)
         
 class SendVerifycationAgainView(generics.UpdateAPIView):
-    
+    authentication_classes = [] 
     def post(self, request, *args, **kwargs):
         email=request.data['email']
         try:
@@ -76,7 +76,7 @@ class SendVerifycationAgainView(generics.UpdateAPIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 class ForgotPasswordView(generics.GenericAPIView):
-    
+    authentication_classes = []
     def post(self, request):
         email=request.data['email']
         try:
@@ -108,7 +108,7 @@ class ResetPasswordView(generics.GenericAPIView):
         
 class LoginView(generics.GenericAPIView):
     serializer_class=LoginSerializer
-    
+    authentication_classes = []
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
