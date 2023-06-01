@@ -4,8 +4,8 @@ from members.models import User
 from members.serializers import UserSerializer
 
 class VideoSerializer(serializers.ModelSerializer):
-    title = serializers.CharField(max_length=80, min_length=8)
-    description = serializers.CharField(max_length=200, min_length=8)
+    title = serializers.CharField(max_length=80, min_length=4)
+    description = serializers.CharField(max_length=200, min_length=4)
     video_file_original = serializers.FileField(write_only=True)
     thumbnail = serializers.FileField(read_only=True)
     author = UserSerializer(read_only=True)
@@ -16,8 +16,8 @@ class VideoSerializer(serializers.ModelSerializer):
         fields = ['title', 'description', 'author', 'video_file_original', 'thumbnail', 'created_at', 'id']
         
 class VideoDetailSerializer(serializers.ModelSerializer):
-    title = serializers.CharField(max_length=80, min_length=8)
-    description = serializers.CharField(max_length=200, min_length=8)
+    title = serializers.CharField(max_length=80, min_length=4)
+    description = serializers.CharField(max_length=200, min_length=4)
     video_file_480p = serializers.FileField(read_only=True)
     video_file_720p = serializers.FileField(read_only=True)
     video_file_1080p = serializers.FileField(read_only=True)

@@ -44,8 +44,8 @@ ALLOWED_HOSTS = [
 CSRF_TRUSTED_ORIGINS = ['https://mytube.backendtest-vitt.de']
 
 CORS_ALLOWED_ORIGINS = [
-    'https://mytube.simon-vitt.de/',
-    'https://www.mytube.simon-vitt.de/'
+    'https://mytube.simon-vitt.de',
+    'https://www.mytube.simon-vitt.de'
 ]
 
 AUTH_USER_MODEL = 'members.User'
