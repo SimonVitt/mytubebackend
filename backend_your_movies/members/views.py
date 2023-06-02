@@ -26,18 +26,6 @@ class RegisterView(generics.CreateAPIView):
         serializer = self.get_serializer(data=user_to_create)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        
-        user=User.objects.get(email=serializer.data['email'])
-        token=RefreshToken.for_user(user).access_token
-        
-        send_mail(
-            'Confirm Account',
-            f'Hello {user.username}, \n please click on the Link to confirm your account :) \n http://localhost:4200/account-created/{token}',
-            'kontakt@simon-vitt.de',
-            [user.email],
-            fail_silently=False
-        )
-        
         return Response(status=status.HTTP_201_CREATED)
     
 class VerifyuserView(generics.UpdateAPIView):
@@ -66,7 +54,7 @@ class SendVerifycationAgainView(generics.UpdateAPIView):
             token=RefreshToken.for_user(user).access_token
             send_mail(
                 'Confirm Account',
-                f'Hello {user.username}, \n please click on the Link to confirm your account :) \n http://localhost:4200/account-created/{token}',
+                f'Hello {user.username}, \n please click on the Link to confirm your account :) \n https://mytube.simon-vitt.de/account-created/{token}',
                 'kontakt@simon-vitt.de',
                 [user.email],
                 fail_silently=False
@@ -84,7 +72,7 @@ class ForgotPasswordView(generics.GenericAPIView):
             token=RefreshToken.for_user(user).access_token
             send_mail(
                 'Reset Password',
-                f'Hello {user.username}, \n please click on the Link to reset your password :) \n http://localhost:4200/new-password/{token}',
+                f'Hello {user.username}, \n please click on the Link to reset your password :) \n https://mytube.simon-vitt.de/new-password/{token}',
                 'kontakt@simon-vitt.de',
                 [user.email],
                 fail_silently=False

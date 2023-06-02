@@ -1,0 +1,4 @@
+cd backend_your_movies
+set DJANGO_SETTINGS_MODULE=backend_your_movies.settings
+set REDIS_PASSWORD=foobared
+rqworker -w rq_win.WindowsWorker

@@ -11,7 +11,7 @@ def send_confirmation_email_register(sender, instance, created, **kwargs):
         token = RefreshToken.for_user(user).access_token
         send_mail(
             'Confirm Account',
-            f'Hello {user.username}, \n please click on the Link to confirm your account :) \n http://localhost:4200/account-created/{token}',
+            f'Hello {user.username}, \n please click on the Link to confirm your account :) \n https://mytube.simon-vitt.de/account-created/{token}',
             'kontakt@simon-vitt.de',
             [user.email],
             fail_silently=False
