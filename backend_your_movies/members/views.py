@@ -1,7 +1,5 @@
-from django.shortcuts import render
 from rest_framework import generics, status
 from .serializers import RegisterSerializer, LoginSerializer, ResetPasswordSerializer
-from django.core import serializers
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from members.models import User
@@ -11,24 +9,14 @@ import jwt
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import ValidationError
-
-
-
-
+from rest_framework.views import APIView
 # Create your views here.
 
 class RegisterView(generics.CreateAPIView):
     serializer_class= RegisterSerializer
     authentication_classes = [] 
-    def post(self, request, *args, **kwargs):
-        user_to_create=request.data
-        serializer = self.get_serializer(data=user_to_create)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(status=status.HTTP_201_CREATED)
     
-class VerifyuserView(generics.UpdateAPIView):
+class VerifyuserView(APIView):
     authentication_classes = []
     def post(self, request, *args, **kwargs):
         token=request.data['token']
@@ -45,7 +33,7 @@ class VerifyuserView(generics.UpdateAPIView):
         except jwt.exceptions.DecodeError as identifier:
             return Response({'error': 'Invalid Token'},status=status.HTTP_400_BAD_REQUEST)
         
-class SendVerifycationAgainView(generics.UpdateAPIView):
+class SendVerifycationAgainView(APIView):
     authentication_classes = [] 
     def post(self, request, *args, **kwargs):
         email=request.data['email']
@@ -63,7 +51,7 @@ class SendVerifycationAgainView(generics.UpdateAPIView):
         except User.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-class ForgotPasswordView(generics.GenericAPIView):
+class ForgotPasswordView(APIView):
     authentication_classes = []
     def post(self, request):
         email=request.data['email']
@@ -81,7 +69,7 @@ class ForgotPasswordView(generics.GenericAPIView):
         except User.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
-class ResetPasswordView(generics.GenericAPIView):
+class ResetPasswordView(APIView):
     serializer_class=ResetPasswordSerializer
     authentication_classes=[JWTAuthentication]
     permission_classes=[IsAuthenticated]
@@ -94,7 +82,7 @@ class ResetPasswordView(generics.GenericAPIView):
         return Response(status=status.HTTP_200_OK)
     
         
-class LoginView(generics.GenericAPIView):
+class LoginView(APIView):
     serializer_class=LoginSerializer
     authentication_classes = []
     def post(self, request):
@@ -116,7 +104,7 @@ class CustomTokenRefreshView(TokenRefreshView):
         
         return Response({"tokens":current_user.tokens()}, status=status.HTTP_200_OK)
     
-class LogoutView(generics.GenericAPIView):
+class LogoutView(APIView):
     
     def post(self, request):
         try:
