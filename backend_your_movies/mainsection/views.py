@@ -22,7 +22,6 @@ class VideosListView(generics.ListCreateAPIView):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
     permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
     pagination_class = VideosPageNumberPagination
     
     def perform_create(self, serializer):
@@ -40,11 +39,9 @@ class VideosDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Video.objects.all()
     serializer_class = VideoDetailSerializer
     permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
     
     
 class OwnVideosListView(generics.ListAPIView):
-    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = VideoSerializer
     pagination_class = VideosPageNumberPagination
@@ -58,4 +55,3 @@ class OwnVideosDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Video.objects.all()
     serializer_class = VideoDetailSerializer
     permission_classes = [IsAuthenticated, OwnsVideo]
-    authentication_classes = [JWTAuthentication]
